@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Timer App</string>
+    <string name="reset">RESET</string>
+    <string name="start">start</string>
+    <string name="hoursText">00</string>
+    <string name="minutesText">00</string>
+    <string name="secondText">00</string>
+</resources>
