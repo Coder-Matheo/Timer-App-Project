@@ -155,9 +155,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 toTimerList = new Intent(MainActivity.this, TimerListActivity.class);
-                String ee = getList.get(0).getSeconds();
-                if (!ee.equals(null) ){
-                    toTimerList.putExtra("timeValue", String.valueOf(ee));
+                String secStr = getList.get(0).getSeconds();
+                String minStr = getList.get(0).getMinutes();
+                String hourStr = getList.get(0).getHours();
+                String formatTimer = String.format("%s : %s : %s", hourStr,minStr,secStr);
+
+                if (!formatTimer.equals(null) ){
+                    toTimerList.putExtra("timeValue", formatTimer);
                     resetTimer();
                     startActivity(toTimerList);
                 }
