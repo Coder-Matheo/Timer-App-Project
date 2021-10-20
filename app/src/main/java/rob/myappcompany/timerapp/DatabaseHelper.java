@@ -17,12 +17,13 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final String TIMER_APP_DB = "TIMER_DB";
+    public static final String TIMER_APP_DB = "TIMER_IMG_DB";
     public static final String TIMER_TABLE = "TIMER_TABLE";
     public static final String TIMER_ID = "TIMER_ID";
     public static final String TIMER_TIME = "TIMER_TIME";
     public static final String TIMER_DATA = "TIMER_DATA";
     public static final String TIMER_DESC = "TIMER_DESC";
+    public static final String TIMER_IMG = "TIMER_IMG";
 
 
     public DatabaseHelper(@Nullable Context context) {
@@ -33,7 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) throws SQLiteException{
         try {
             String timerTableStat = "CREATE TABLE IF NOT EXISTS " + TIMER_TABLE + "(" + TIMER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TIMER_TIME + " TEXT, " + TIMER_DATA + " TEXT, "+
-                    TIMER_DESC + " TEXT )";
+                    TIMER_DESC + " TEXT,"+ TIMER_IMG +" BLOG )";
 
             db.execSQL(timerTableStat);
         }catch (SQLiteException e){
@@ -92,8 +93,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(queryString, null);
         if (cursor.moveToFirst()){
             do {
-                TimeValueModel setTimeVal = new TimeValueModel(cursor.getString(1),cursor.getString(2));
-                ret_list.add(setTimeVal);
+                //TimeValueModel setTimeVal = new TimeValueModel(cursor.getString(1),cursor.getString(2));
+                //ret_list.add(setTimeVal);
             }while (cursor.moveToNext());
         }
         return ret_list;
