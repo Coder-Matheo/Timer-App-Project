@@ -4,8 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,11 +28,14 @@ import java.util.List;
 
 public class TimerListActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_GALLERY = 999;
+    Context context;
     View view;
     TextView textView;
     ArrayAdapter adapter;
     Button imageButton;
     Button cancelButton;
+    ListView listView;
 
     private DatabaseHelper databaseHelper;
 
@@ -40,23 +47,29 @@ public class TimerListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer_list);
 
-
         //timeListView = findViewById(R.id.TimeListView);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         view = this.getWindow().getDecorView();
         view.setBackgroundColor(ContextCompat.getColor(this, R.color.appleBlack));
 
-        Intent getTime = getIntent();
-        String time = getTime.getStringExtra("timeValue");
 
-        //double timeDouble = Double.parseDouble(time);
+        alertMessage();
+        init();
+        requestPermissionForImage();
+        getItemFromDBTogetAdapterPar();
+        insertItemToDB();
+    }
 
+
+
+    public void init(){
+        textView = (TextView) findViewById(R.id.textView);
+        listView = (ListView) findViewById(R.id.TimeListView);
         databaseHelper = new DatabaseHelper(this);
+    }
 
-        //databaseHelper.insertItem(new TimeValueModel(time, "Time"));
-
+    private void getItemFromDBTogetAdapterPar() {
         List<TimeValueModel> getAllTime_db = databaseHelper.getAllTime();
 
         List<String> num = new ArrayList<>();
@@ -64,19 +77,25 @@ public class TimerListActivity extends AppCompatActivity {
             num.add(getAllTime_db.get(i).getTIMER_TIME());
         }
 
-        textView = findViewById(R.id.textView);
-        textView.setText(String.valueOf(time));
-
         adapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item , num);
 
-        ListView listView = (ListView) findViewById(R.id.TimeListView);
-        listView.setAdapter(adapter);
 
-        alertMessage();
-        init();
+        listView.setAdapter(adapter);
     }
 
-    public void init(){
+    public void requestPermissionForImage(){
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                REQUEST_CODE_GALLERY);
+    }
+
+    private void insertItemToDB() {
+
+        Intent getTime = getIntent();
+        String time = getTime.getStringExtra("timeValue");
+        //databaseHelper.insertItem(new TimeValueModel(time, "Time"));
+
+        textView.setText(String.valueOf(time));
 
     }
 
@@ -95,6 +114,7 @@ public class TimerListActivity extends AppCompatActivity {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Toast.makeText(getApplicationContext(), "Seccess", Toast.LENGTH_SHORT).show();
             }
         });

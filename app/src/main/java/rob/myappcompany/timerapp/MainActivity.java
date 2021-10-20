@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     Intent toTimerList;
     List<timeTeil>  getList;
 
+    public Context context;
 
 
     @Override
