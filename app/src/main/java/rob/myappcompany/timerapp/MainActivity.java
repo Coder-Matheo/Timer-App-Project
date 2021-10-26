@@ -1,21 +1,33 @@
 package rob.myappcompany.timerapp;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -24,6 +36,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
 
 
+    private static final int REQUEST_CODE_GALLERY = 999;
     float x1, x2, y1, y2;
     String tag = MainActivity.class.getSimpleName();
 
@@ -32,16 +45,14 @@ public class MainActivity extends AppCompatActivity {
     private TimerTask timerTask;
     Double time = 0.0;
     private boolean timerStarted = false;
-    boolean returnBool = false;
 
     TextView hoursTextView;
     TextView minutesTextView;
     TextView secondsTextView;
+    Button resetButton;
     View view;
     Intent toTimerList;
     List<timeTeil>  getList;
-
-    public Context context;
 
 
     @Override
@@ -49,20 +60,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        stopstartButton = findViewById(R.id.startStopBtn);
-        hoursTextView = findViewById(R.id.hoursId);
-        minutesTextView = findViewById(R.id.minuteId);
-        secondsTextView = findViewById(R.id.secondId);
-
-        timer = new Timer();
-
         view = this.getWindow().getDecorView();
         view.setBackgroundColor(ContextCompat.getColor(this, R.color.appleBlack));
 
+        init();
 
     }
 
 
+    public void init(){
+        stopstartButton = findViewById(R.id.startStopBtn);
+        hoursTextView = findViewById(R.id.hoursId);
+        minutesTextView = findViewById(R.id.minuteId);
+        secondsTextView = findViewById(R.id.secondId);
+        resetButton = findViewById(R.id.resetButtonId);
+        resetButton.setEnabled(false);
+
+        timer = new Timer();
+
+    }
 
 
     @Override
@@ -87,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
     public void startStopTapped(View view) {
         if (timerStarted == false){
             timerStarted = true;
-
             setButtonUI("STOP", R.color.red);
 
             startTimer();
@@ -122,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                         minutesTextView.setText(getTimerText().get(0).getMinutes());
                         secondsTextView.setText(getTimerText().get(0).getSeconds());
 
+                        resetButton.setEnabled(true);
                     }
                 });
             }

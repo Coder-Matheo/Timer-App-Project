@@ -5,4 +5,7 @@
     <string name="hoursText">00</string>
     <string name="minutesText">00</string>
     <string name="secondText">00</string>
+    <string name="save">Save</string>
+    <string name="Image">image</string>
+    <string name="cancel">cancel</string>
 </resources>

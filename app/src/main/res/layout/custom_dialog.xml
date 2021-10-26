@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,30 +10,44 @@
     android:paddingTop="20dp"
     >
 
+    <ImageView
+        android:id="@+id/imageActiveListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <EditText
         android:id="@+id/descriptionEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Description" />
+        android:hint="Description"
+        android:inputType="textPersonName" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/save" />
+
         <Button
             android:id="@+id/imageButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Image" />
+            android:text="@string/Image" />
 
         <Button
             android:id="@+id/cancelButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="openImageFolder"
-            android:text="cancel" />
+            android:text="@android:string/cancel" />
 
     </LinearLayout>
 

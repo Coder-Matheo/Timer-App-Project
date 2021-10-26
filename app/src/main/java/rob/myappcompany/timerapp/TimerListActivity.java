@@ -11,7 +11,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,23 +23,30 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TimerListActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_GALLERY = 999;
-    Context context;
+
     View view;
     TextView textView;
     ArrayAdapter adapter;
     Button imageButton;
     Button cancelButton;
+    Button saveButton;
     ListView listView;
+    ImageView imageActiveListView;
+    ImageView imageView;
+
 
     private DatabaseHelper databaseHelper;
 
@@ -54,20 +65,62 @@ public class TimerListActivity extends AppCompatActivity {
         view.setBackgroundColor(ContextCompat.getColor(this, R.color.appleBlack));
 
 
-        alertMessage();
         init();
-        requestPermissionForImage();
+        alertMessage();
         getItemFromDBTogetAdapterPar();
         insertItemToDB();
-    }
 
+       // chooseUndAddImageFromDevice();
+    }
 
 
     public void init(){
         textView = (TextView) findViewById(R.id.textView);
         listView = (ListView) findViewById(R.id.TimeListView);
         databaseHelper = new DatabaseHelper(this);
+
+        saveButton = findViewById(R.id.saveButton);
+        imageActiveListView = findViewById(R.id.imageActiveListView);
+        imageView = findViewById(R.id.imageViewId);
     }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_GALLERY){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, REQUEST_CODE_GALLERY);
+            }else {
+                Toast.makeText(getApplicationContext(), "you do'nt", Toast.LENGTH_LONG).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
+            Uri uri = data.getData();
+
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(uri);
+
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                imageView.setImageBitmap(bitmap);
+
+            }catch (FileNotFoundException e){
+                e.printStackTrace();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
 
     private void getItemFromDBTogetAdapterPar() {
         List<TimeValueModel> getAllTime_db = databaseHelper.getAllTime();
@@ -114,7 +167,7 @@ public class TimerListActivity extends AppCompatActivity {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                requestPermissionForImage();
                 Toast.makeText(getApplicationContext(), "Seccess", Toast.LENGTH_SHORT).show();
             }
         });
@@ -126,9 +179,6 @@ public class TimerListActivity extends AppCompatActivity {
                 inputDialog.dismiss();
             }
         });
-
-
-
 
     }
 

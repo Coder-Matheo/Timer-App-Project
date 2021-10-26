@@ -4,11 +4,28 @@ public class timeTeil {
     private String hours;
     private String minutes;
     private String seconds;
+    private byte[] image;
 
     public timeTeil(String hours, String minutes, String seconds) {
         this.hours = hours;
         this.minutes = minutes;
         this.seconds = seconds;
+    }
+
+    //with image parameter for insert image to database
+    public timeTeil(String hours, String minutes, String seconds, byte[] images) {
+        this.hours = hours;
+        this.minutes = minutes;
+        this.seconds = seconds;
+        this.image = images;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public String getHours() {
